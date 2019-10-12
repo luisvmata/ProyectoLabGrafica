@@ -38,6 +38,7 @@ CTexture text3;	//Flecha
 CTexture text4;	//Pavimento
 CTexture text5;	//Pasto01
 CTexture text6;	//Casa01
+CTexture text7;
 
 CTexture tree;
 CTexture edificio;
@@ -51,6 +52,8 @@ CTexture esfera3;
 
 CFiguras cubo;
 CFiguras sky;
+CFiguras cueva;
+
 
 //END NEW//////////////////////////////////////////
 
@@ -62,6 +65,7 @@ CFiguras fig4;	//Pasto01
 CFiguras fig5;	//Casa01
 CFiguras fig6;
 CFiguras fig7;	//Para crear Monito
+CFiguras fig8;
 //Arbol de navidad
 CFiguras tronco;
 CFiguras pino;
@@ -72,60 +76,61 @@ CFiguras esfe3;
 
 void ciudad ()
 {
-
+		//Carretera
 		glPushMatrix(); //Camino1
 			glTranslatef(23.5,0.0,0.0);
-			glScalef(40,0.1,7);
+			glScalef(53,0.1,7);
 			glDisable(GL_LIGHTING);
 			fig3.prisma2(text4.GLindex, 0);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
-
+		//Carretera
 		glPushMatrix(); //Camino2
 			glTranslatef(-23.5,0.0,0.0);
-			glScalef(40,0.1,7);
+			glScalef(53,0.1,7);
 			glDisable(GL_LIGHTING);
 			fig3.prisma2(text4.GLindex, 0);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 
 		glPushMatrix(); //Pasto
-			glTranslatef(0.0,0.0,-4.0);
-			glScalef(87,0.1,1);
+			glTranslatef(0.0,0.0,-35.0);
+			glScalef(100,0.1,63);
 			glDisable(GL_LIGHTING);
-			fig4.prisma2(text5.GLindex, 0);
+			fig4.prisma2(text5.GLindex, text5.GLindex);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 
 		glPushMatrix(); //Pasto
-			glTranslatef(0.0,0.0,4.0);
-			glScalef(87,0.1,1);
+			glTranslatef(0.0,0.0,35.0);
+			glScalef(100,0.1,63);
 			glDisable(GL_LIGHTING);
-			fig4.prisma2(text5.GLindex, 0);
+			fig4.prisma2(text5.GLindex, text6.GLindex);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 
 		glPushMatrix(); //Casa01
-			glTranslatef(0.0,3.0,7.0);
+			glTranslatef(0.0,4.0,7.0);
 			glRotatef(90,1,0,0);
 			glRotatef(180,0,0,1);
-			glScalef(6,5.0,6);
+			glScalef(20,5.0,6);
 			glDisable(GL_LIGHTING);
 			fig5.prisma2(text6.GLindex,text6.GLindex);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 
 		glPushMatrix(); //Casa01
-			glTranslatef(0.0,3.0,-7.0);
+			glTranslatef(0.0,4.0,-7.0);
 			glRotatef(90,1,0,0);
 			//glRotatef(180,0,0,1);
 			glScalef(6,5.0,6);
 			glDisable(GL_LIGHTING);
-			fig5.prisma2(text6.GLindex, text6.GLindex);
+			fig7.skybox(1,1,1, text7.GLindex);
+			//fig7.skybox2(200.0, 200.0, 130.0, text7.GLindex);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
 }
-
+/*
 void arbol()
 {
 	glPushMatrix();
@@ -187,7 +192,7 @@ void arbol()
 				
 			glPopMatrix();
 }
-
+*/
 GLuint createDL() 
 {
 	GLuint ciudadDL;
@@ -230,17 +235,9 @@ void InitGL ( GLvoid )     // Inicializamos parametros
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
     
-    text1.LoadBMP("cielo4.bmp");
+    text1.LoadTGA("11.tga");
 	text1.BuildGLTexture();
 	text1.ReleaseImage();
-
-	text2.LoadBMP("logopumas.bmp");
-	text2.BuildGLTexture();
-	text2.ReleaseImage();
-
-	text3.LoadTGA("city/arrow.tga");
-	text3.BuildGLTexture();
-	text3.ReleaseImage();
 
 	text4.LoadTGA("city/pavimento.tga");
 	text4.BuildGLTexture();
@@ -253,6 +250,10 @@ void InitGL ( GLvoid )     // Inicializamos parametros
 	text6.LoadTGA("ladrillo.tga");
 	text6.BuildGLTexture();
 	text6.ReleaseImage();
+
+	text7.LoadTGA("tronco2.tga");
+	text7.BuildGLTexture();
+	text7.ReleaseImage();
 
 
 	tree.LoadTGA("tree01.tga");
@@ -273,89 +274,33 @@ void InitGL ( GLvoid )     // Inicializamos parametros
 
 }
 
-void pintaTexto(float x, float y, float z, void *font,char *string)
-{
-  
-  char *c;     //Almacena los caracteres a escribir
-  glRasterPos3f(x, y, z);	//Posicion apartir del centro de la ventana
-  //glWindowPos2i(150,100);
-  for (c=string; *c != '\0'; c++) //Condicion de fin de cadena
-  {
-    glutBitmapCharacter(font, *c); //imprime
-  }
-}
-
 void display ( void )   // Creamos la funcion donde se dibuja
 {
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
 	glLoadIdentity();
-	
-		
 	glPushMatrix();
 		glRotatef(g_lookupdown,1.0f,0,0);
 
 		gluLookAt(	objCamera.mPos.x,  objCamera.mPos.y,  objCamera.mPos.z,	
 					objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,	
 					objCamera.mUp.x,   objCamera.mUp.y,   objCamera.mUp.z);
-	
-
 		glPushMatrix();		
 			glPushMatrix(); //Creamos cielo
 				glDisable(GL_LIGHTING);
 				glTranslatef(0,60,0);
-				fig1.skybox(130.0, 130.0, 130.0,text1.GLindex);
+				fig1.skybox(100.0, 120.0, 130.0,text1.GLindex);
 				glEnable(GL_LIGHTING);
 			glPopMatrix();
-
+			//Llamada la ciudad, se agrega carretera 
 			glPushMatrix();
 				glEnable ( GL_COLOR_MATERIAL );
 					glColor3f(1, 1, 1);
 					glCallList(ciudad_display_list);
 				glDisable ( GL_COLOR_MATERIAL );
 			glPopMatrix();
-			
-			glPushMatrix(); //Flecha
-				glScalef(7,0.1,7);
-				glDisable(GL_LIGHTING);
-				fig3.prisma_anun(text3.GLindex, 0);
-				glEnable(GL_LIGHTING);
-			glPopMatrix();
-
-			glEnable ( GL_COLOR_MATERIAL );
-			/*glPushMatrix();
-				glTranslatef(-30, 0, 10);
-				arbol();
-			glPopMatrix();*/
-
-			glPushMatrix();
-				glTranslatef(17, 0, -10);
-				glColor3f(1.0, 1.0, 1.0);
-				fig1.esfera(4, 20, 20, text2.GLindex);
-			glPopMatrix();
-			
-			glColor3f(1.0,1.0,1.0);
-
 		glPopMatrix(); 
-
 	glPopMatrix();
-
 	glutSwapBuffers ( );
-
-}
-
-void animacion()
-{
-	
-		fig3.text_izq-= 0.001;
-		fig3.text_der-= 0.001;
-		if(fig3.text_izq<-1)
-			fig3.text_izq=0;
-		if(fig3.text_der<0)
-			fig3.text_der=1;
-
-
-	glutPostRedisplay();
 }
 
 void reshape ( int width , int height )   // Creamos funcion Reshape
@@ -459,7 +404,6 @@ int main ( int argc, char** argv )   // Main Function
   glutReshapeFunc     ( reshape );	//Indicamos a Glut función en caso de cambio de tamano
   glutKeyboardFunc    ( keyboard );	//Indicamos a Glut función de manejo de teclado
   glutSpecialFunc     ( arrow_keys );	//Otras
-  glutIdleFunc		  ( animacion );
 
 
   glutMainLoop        ( );          // 
